@@ -5,7 +5,14 @@ Browser-side TypeScript/JavaScript shared by the Zood web properties.
 - `js/zood.ts` - client for the [oscar](https://github.com/zood/oscar) API: login (challenge/response),
   account deletion, drop box watching, and the libsodium wrappers that go with them.
 - `js/zdtime.ts` - relative time formatting helpers.
-- `libs/sodium.0.7.15.js` - vendored [libsodium.js](https://github.com/jedisct1/libsodium.js), loaded as-is.
+- `libs/sodium.0.7.15.js` - vendored [libsodium.js](https://github.com/jedisct1/libsodium.js) standard build,
+  loaded as-is. **It does not contain `crypto_pwhash`**, so it cannot log in - only the box/secretbox
+  operations work.
+- `libs/sodium-sumo.0.7.15.js` - the "sumo" build of the same release, which adds Argon2 (`crypto_pwhash`).
+  Anything that calls `zood.stretchPassword`, and therefore anything that logs in, needs this one. It's ~320 KB
+  larger, so pages that only decrypt with a key they already have can stay on the standard build.
+
+Both are `dist/browsers{,-sumo}/sodium.js` from upstream tag `0.7.15`, byte for byte.
 - `typings/` - hand-maintained `.d.ts` files for `sodium` and `Intl`.
 
 ## Building
